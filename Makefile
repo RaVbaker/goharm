@@ -7,8 +7,9 @@ GOARCH:=amd64
 PLATFORMS:=linux darwin
 GOOS=$(word 1, $@)
 BINARY_NAME=goharm
-LDFLAGS=-ldflags "-X 'main.Version=v$(VERSION)'"
+LDFLAGS=-ldflags "-X 'main.Version=$(VERSION)'"
 VERSION?=$(shell git describe --tags --always --dirty)
+BUILD_FILES?=$(shell find $(BUILD_DIR)/* | sed -e "s/^/-a /g"|tr '\n' ' ')
 
 all: test build
 
@@ -17,6 +18,8 @@ $(PLATFORMS):
 	GOOS=$(GOOS) GOARCH=$(GOARCH) $(GOBUILD) $(LDFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME)-$(GOOS)-$(GOARCH) -v ./cmd/goharm
 
 build: linux darwin
+
+ship: tag build release
 
 test:
     # 	go get -u github.com/rakyll/gotest
@@ -34,10 +37,17 @@ tag:
 	git tag -a $(TAG) -m "$(TAG)"
 	git push origin $(TAG)
 
+release:
+	if ! command -v hub &>/dev/null  ; then \
+		echo "install git 'hub' command first"; \
+		exit 1; \
+	fi
+	hub release create $(BUILD_FILES) -m "Release v$(TAG)" $(TAG)
+
 install:
 	$(GOCMD) install github.com/ravbaker/goharm/cmd/...
 
 lint:
 	go vet ./...
 
-.PHONY: all build test clean tag $(PLATFORMS)
+.PHONY: all clean test tag build release $(PLATFORMS)

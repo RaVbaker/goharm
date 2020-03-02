@@ -40,7 +40,7 @@ func main() {
 
 	switch os.Args[1] {
 	case "login":
-		loginCmd := flag.NewFlagSet("login", flag.PanicOnError)
+		loginCmd := flag.NewFlagSet("login", flag.ExitOnError)
 		email := loginCmd.String("email", "", "Provide your account email")
 		password := loginCmd.String("password", "", "Provide your account password")
 		loginCmd.Parse(os.Args[2:])
@@ -55,7 +55,7 @@ func main() {
 	case "config":
 		commands.Config(cfg)
 	case "time-logs":
-		timeLogsCmd := flag.NewFlagSet("time-logs", flag.PanicOnError)
+		timeLogsCmd := flag.NewFlagSet("time-logs", flag.ExitOnError)
 		rangeFilter := timeLogsCmd.String("range", "m", "Desired time range (either 'month' or 'week'), default is 'week'")
 		timeLogsCmd.Parse(os.Args[2:])
 		commands.TimeLogs(cfg, *rangeFilter)
