@@ -19,10 +19,9 @@ $(PLATFORMS):
 
 build: linux darwin
 
-ship: tag build release
+ship: clean test tag build release
 
 test:
-    # 	go get -u github.com/rakyll/gotest
 	$(GOTEST) -race -timeout 100s -cover -v ./...
 
 clean:
@@ -50,4 +49,4 @@ install:
 lint:
 	go vet ./...
 
-.PHONY: all clean test tag build release $(PLATFORMS)
+.PHONY: all clean test tag build release ship lint $(PLATFORMS)

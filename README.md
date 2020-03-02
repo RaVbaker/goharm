@@ -29,7 +29,7 @@ make test
 Use command with make with appropriate TAG for version:
 
 ```bash
-TAG=0.0.X make clean test tag build release
+TAG=0.0.X make ship
 ```
 
 (c) Rafał "RaVbaker" Piekarski 2020
