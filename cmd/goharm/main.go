@@ -12,6 +12,7 @@ import (
 )
 
 var cfg *config.Config
+var Version = ""
 
 func init() {
 	var err error
@@ -24,6 +25,14 @@ func init() {
 }
 
 func main() {
+	showVersion := flag.Bool("v", false, "Show version number")
+	flag.Parse()
+	
+	if *showVersion {
+		println(Version)
+		return
+	}
+	
 	if len(os.Args) < 2 {
 		printHelp()
 		os.Exit(1)
@@ -58,6 +67,6 @@ func main() {
 func printHelp() {
 	fmt.Println(`Rebased Harmonogram CLI`)
 	flag.Usage()
-	fmt.Println("\tgoharm [SUBCOMMAND]")
+	fmt.Println("\n\tgoharm [SUBCOMMAND]")
 	fmt.Println("\nexpected 'login', 'logout', 'config' or 'time-logs' subcommands")
 }
